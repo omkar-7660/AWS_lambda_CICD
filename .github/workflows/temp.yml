@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - dev
+      - test
 
 jobs:
   deploy:
@@ -17,13 +17,9 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y software-properties-common
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt-get update
-        sudo apt-get install -y python3.11 python3.11-venv python3.11-distutils python3-pip jq zip
-        python3.11 -m ensurepip
-        python3.11 -m pip install boto3
-    
+        sudo apt-get install -y python3.11 python3.11-venv python3-pip jq zip
+        pip3 install boto3
+
     - name: Set environment variables
       id: set-env-vars
       run: |
@@ -69,7 +65,7 @@ jobs:
           aws lambda create-function \
             --function-name $FUNCTION_NAME \
             --runtime python3.11 \
-            --role arn:aws:iam::705711146351:role/lambda_execution_role\
+            --role arn:aws:iam::851725469799:role/service-role/test_function-role-k06sk5ka \
             --handler app.lambda_handler \
             --timeout 300 \
             --zip-file fileb://lambda.zip \
