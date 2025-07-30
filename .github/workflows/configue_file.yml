@@ -36,15 +36,26 @@ jobs:
           echo "API_KEY=test_api_key" >> $GITHUB_ENV
           echo "LOG_LEVEL=DEBUG" >> $GITHUB_ENV
         fi
-
+              
     - name: Package Lambda Function
       run: |
+        echo "📦 Creating build directory..."
         mkdir -p lambda_build
+
+        echo "📥 Installing dependencies into build directory..."
+        python3.11 -m pip install --upgrade pip
         python3.11 -m pip install --no-cache-dir -r lambda_function/requirements.txt -t lambda_build
+
+        echo "📁 Copying Lambda function code..."
         cp lambda_function/app.py lambda_build/
+
+        echo "🗜️  Zipping contents into lambda.zip..."
         cd lambda_build
-        zip -r ../lambda.zip .
+        zip -r ../lambda.zip . > /dev/null
         cd ..
+
+        echo "✅ Lambda package created successfully: lambda.zip"
+
 
     - name: Deploy to AWS Lambda
       env:
