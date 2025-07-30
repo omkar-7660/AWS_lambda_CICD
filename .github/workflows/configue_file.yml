@@ -40,7 +40,7 @@ jobs:
     - name: Package Lambda Function
       run: |
         mkdir -p lambda_build
-        pip3.11 install --no-cache-dir -r lambda_function/requirements.txt -t lambda_build
+        python3.11 -m pip install --no-cache-dir -r lambda_function/requirements.txt -t lambda_build
         cp lambda_function/app.py lambda_build/
         cd lambda_build
         zip -r ../lambda.zip .
